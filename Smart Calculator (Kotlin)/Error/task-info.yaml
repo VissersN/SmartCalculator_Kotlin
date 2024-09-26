@@ -1,0 +1,18 @@
+type: edu
+custom_name: Error!
+files:
+  - name: src/calculator/Main.kt
+    visible: true
+    learner_created: false
+  - name: test/Test.java
+    visible: false
+    learner_created: false
+  - name: test/calculator/MainKtTest.kt
+    visible: true
+    learner_created: true
+feedback_link: https://hyperskill.org/learn/step/7813#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Wed, 25 Sep 2024 08:50:28 UTC"
+record: 5

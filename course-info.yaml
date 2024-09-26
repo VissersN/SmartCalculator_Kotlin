@@ -1,0 +1,13 @@
+type: hyperskill
+title: Smart Calculator (Kotlin)
+language: English
+summary: "<p>Calculators are a very helpful tool that we all use on a regular basis.\
+  \ Why not create one yourself, and make it really special? In this project, you\
+  \ will write a calculator that not only adds, subtracts, and multiplies, but is\
+  \ also smart enough to remember your previous calculations.</p><br/><br/>Learn more\
+  \ at <a href=\"https://hyperskill.org/projects/88?utm_source=ide&utm_medium=ide&utm_campaign=ide&utm_content=project-card\"\
+  >https://hyperskill.org/projects/88</a>"
+programming_language: Kotlin
+content:
+  - Smart Calculator (Kotlin)
+mode: Study

@@ -1,0 +1,17 @@
+type: edu
+files:
+  - name: src/calculator/Main.kt
+    visible: true
+    learner_created: false
+  - name: test/Test.java
+    visible: false
+    learner_created: false
+  - name: test/calculator/MainKtTest.kt
+    visible: true
+    learner_created: true
+feedback_link: https://hyperskill.org/learn/step/7814#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Thu, 26 Sep 2024 12:43:52 UTC"
+record: -1

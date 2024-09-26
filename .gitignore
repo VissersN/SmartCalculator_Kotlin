@@ -1,0 +1,6 @@
+# Project exclude paths
+/.gradle/
+/Smart Calculator (Kotlin)/task/build/
+/Smart Calculator (Kotlin)/task/out/
+/Smart Calculator (Kotlin)/task/out/production/classes/
+/util/build/
