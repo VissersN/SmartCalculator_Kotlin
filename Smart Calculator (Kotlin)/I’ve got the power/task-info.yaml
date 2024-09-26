@@ -6,6 +6,9 @@ files:
   - name: test/Test.java
     visible: false
     learner_created: false
+  - name: test/calculator/MainKtTest.kt
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/learn/step/7815#comment
 status: Unchecked
 record: -1

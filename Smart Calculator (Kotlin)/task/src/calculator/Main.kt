@@ -2,7 +2,7 @@ package calculator
 
 import java.util.*
 
-enum class operationType {
+enum class OperationType {
     ADD,
     SUBSTRACT,
     TIMES,
@@ -18,7 +18,7 @@ fun main() {
         val input = Scanner(System.`in`)
         val line = input.nextLine()
 
-        if (!line.isNotEmpty()) continue // detects empty line and continues application
+        if (line.isEmpty()) continue // detects empty line and continues application
 
 //commands
         if ("/.*".toRegex().matches(line)) {
@@ -66,7 +66,7 @@ fun main() {
         val listOfValuesAndOperators = line.split(" ")
         if (!expressionCheck(listOfValuesAndOperators)) continue
         var result = 0
-        var operator = operationType.ADD
+        var operator = OperationType.ADD
         var changingValue = 0
         for (i in listOfValuesAndOperators.indices) {
             if (i == 0 || i % 2 == 0) {
@@ -127,44 +127,44 @@ fun expressionCheck(list: List<String>): Boolean {
 }
 
 
-fun detectOperation(s: String): operationType {
+fun detectOperation(s: String): OperationType {
     val listOperators = s.split("")
-    var currentOperator = operationType.ADD
+    var currentOperator = OperationType.ADD
     for (i in listOperators.indices) {
         when (listOperators[i]) {
             "+" -> when (currentOperator) {
-                operationType.ADD -> currentOperator = operationType.ADD
-                operationType.SUBSTRACT -> currentOperator = operationType.SUBSTRACT
-                operationType.TIMES -> TODO()
-                operationType.DIVIDE -> TODO()
+                OperationType.ADD -> currentOperator = OperationType.ADD
+                OperationType.SUBSTRACT -> currentOperator = OperationType.SUBSTRACT
+                OperationType.TIMES -> TODO()
+                OperationType.DIVIDE -> TODO()
             }
 
             "-" -> when (currentOperator) {
-                operationType.ADD -> currentOperator = operationType.SUBSTRACT
-                operationType.SUBSTRACT -> currentOperator = operationType.ADD
-                operationType.TIMES -> TODO()
-                operationType.DIVIDE -> TODO()
+                OperationType.ADD -> currentOperator = OperationType.SUBSTRACT
+                OperationType.SUBSTRACT -> currentOperator = OperationType.ADD
+                OperationType.TIMES -> TODO()
+                OperationType.DIVIDE -> TODO()
             }
         }
     }
     return currentOperator
 }
 
-fun operate(changingValue: Int, currentResult: Int, operator: operationType): Int {
+fun operate(changingValue: Int, currentResult: Int, operator: OperationType): Int {
     when (operator) {
-        operationType.ADD -> {
+        OperationType.ADD -> {
             return currentResult + changingValue
         }
 
-        operationType.SUBSTRACT -> {
+        OperationType.SUBSTRACT -> {
             return currentResult - changingValue
         }
 
-        operationType.TIMES -> {
+        OperationType.TIMES -> {
             return currentResult * changingValue
         }
 
-        operationType.DIVIDE -> {
+        OperationType.DIVIDE -> {
             return currentResult / changingValue
         }
     }
