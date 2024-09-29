@@ -7,7 +7,7 @@ class MainKtTest {
     @Test
     fun `Using 3+ should return false`() {
         val list = listOf("1", "+", "3+")
-        val result = expressionCheck(list)
+        val result = expressionCheck1(list)
         assertFalse(result)
     }
 }
