@@ -2,6 +2,7 @@ package calculator
 
 import java.util.*
 import kotlin.math.pow
+import java.math.BigInteger
 
 
 enum class OperationType {
@@ -15,7 +16,7 @@ enum class OperationType {
     PARRIGHT
 }
 
-val storage: MutableMap<String, Int> = mutableMapOf()
+val storage: MutableMap<String, BigInteger> = mutableMapOf()
 val regexExpression = Regex ("([+-]+|[*/]|[()]|[0-9]*|[a-zA-Z]*)")
 
 
@@ -73,7 +74,7 @@ private fun declarationVariables(line: String) {
     val listOfDeclaration = spaceLessLine.split("=")
     if (!checkAssignment(listOfDeclaration)) return
     if ("[+-]?[0-9]+".toRegex().matches(listOfDeclaration[1])) {
-        storage[listOfDeclaration[0]] = listOfDeclaration[1].toInt()
+        storage[listOfDeclaration[0]] = listOfDeclaration[1].toBigInteger()
     } else if ("[a-zA-Z]+".toRegex().matches(listOfDeclaration[1])) {
         if (!storage.containsKey(listOfDeclaration[1])) {
             println("Invalid assignment")
@@ -129,12 +130,12 @@ fun fromInfixToPostfix(input: List<CharSequence>): MutableList<Any> {
     return output
 }
 
-fun calculatePostFix(rpn: MutableList<Any>): Int {
-    val stack: MutableList<Int> = mutableListOf()
+fun calculatePostFix(rpn: MutableList<Any>): BigInteger {
+    val stack: MutableList<BigInteger> = mutableListOf()
     while (rpn.isNotEmpty()) {
         if (rpn[0] !in OperationType.values()) {
             if ("[0-9]+".toRegex().matches(rpn[0].toString())) {
-                stack.add(rpn[0].toString().toInt())
+                stack.add(rpn[0].toString().toBigInteger())
                 rpn.removeAt(0)
             } else {
                 if (!storage.containsKey(rpn[0])) { //TODO: Waarden ophalen werkt nog niet goed.
@@ -151,7 +152,7 @@ fun calculatePostFix(rpn: MutableList<Any>): Int {
             stack.add(intermediateResult)
         }
     }
-return stack[0].toInt()
+return stack[0]
 }
 
 // checks if there's a valid variable name on the left, numbers on the right side and no more than two arguments
@@ -222,7 +223,7 @@ fun detectOperation(s: String): OperationType {
     return currentOperator
 }
 
-fun operate(value1: Int, value2: Int, operator: OperationType): Int {
+fun operate(value1: BigInteger, value2: BigInteger, operator: OperationType): BigInteger {
     when (operator) {
         OperationType.ADD -> {
             return value2 + value1
@@ -241,7 +242,7 @@ fun operate(value1: Int, value2: Int, operator: OperationType): Int {
         }
 
         OperationType.POWER -> {
-            return value1.toDouble().pow(value2.toDouble()).toInt()
+            return value1.toDouble().pow(value2.toDouble()).toInt().toBigInteger()
         }
 
         OperationType.PARLEFT, OperationType.PARRIGHT -> TODO()
