@@ -1,7 +1,6 @@
 package calculator
 
 import java.util.*
-import javax.swing.text.MutableAttributeSet
 import kotlin.math.pow
 
 
@@ -17,7 +16,7 @@ enum class OperationType {
 }
 
 val storage: MutableMap<String, Int> = mutableMapOf()
-val regexExpression = Regex("([+\\-]*[0-9]*|[a-zA-Z]*)")
+val regexExpression = Regex ("([+-]+|[*/]|[()]|[0-9]*|[a-zA-Z]*)")
 
 
 fun main() {
@@ -57,61 +56,37 @@ fun main() {
 
         //declarations of variables
         if ("=".toRegex().containsMatchIn(line)) {
-            val spaceLessLine = line.replace(" ", "") // remove spaces from input
-            val listOfDeclaration = spaceLessLine.split("=")
-            if (!checkAssignment(listOfDeclaration)) continue
-            if ("[0-9]+".toRegex().matches(listOfDeclaration[1])) {
-                storage[listOfDeclaration[0]] = listOfDeclaration[1].toInt()
-            } else if ("[a-zA-Z]+".toRegex().matches(listOfDeclaration[1])) {
-                if (!storage.containsKey(listOfDeclaration[1])) {
-                    println("Invalid assignment")
-                    continue@Start
-                }
-                storage[listOfDeclaration[0]] = storage[listOfDeclaration[1]]!!
-            }
+            declarationVariables(line)
             continue
         }
+        //putting together an input to process to postfix and calculate
         val spacedInput = line.replace("(", "( ").replace(")", " )")
-        val inputList = spacedInput.split(" ")
-        if (!expressionCheck(inputList)) continue
-        val postFix = fromInfixToPostfix(inputList) // TODO: Deze klopt nog niet.
-        println("Postfix $postFix")
-        println("Result: ${calculatePostFix(postFix)}")
-//        val listOfValuesAndOperators = line.split(" ")
-//        if (!expressionCheck(listOfValuesAndOperators)) continue
-//        var result = 0
-//        var operator = OperationType.ADD
-//        var changingValue = 0
-//        for (i in listOfValuesAndOperators.indices) {
-//            if (i == 0 || i % 2 == 0) {
-//                if ("[0-9]+".toRegex().matches(listOfValuesAndOperators[i])) {
-//                    changingValue = listOfValuesAndOperators[i].toInt()
-//                } else if ("[a-zA-Z]+".toRegex().matches(listOfValuesAndOperators[i])) {
-//                    if (!storage.containsKey(listOfValuesAndOperators[i])) {
-//                        println("Unknown variable")
-//                        continue@Start
-//                    }
-//                    changingValue = storage[listOfValuesAndOperators[i]]!!
-//                }
-//                result = operate(changingValue = changingValue, currentResult = result, operator)
-//            } else {
-//                operator = detectOperation(listOfValuesAndOperators[i])
-//
-//            }
-//        }
-//
-////            val result = listOfInts.sum()
-//
-//        println(result)
-//
+        val inputList = spacedInput.split(" ").filter { it.isNotBlank() }
+        if (!expressionCheck(inputList)) continue // TODO: Deze klopt nog niet.
+        val postFix = fromInfixToPostfix(inputList)
+        println(calculatePostFix(postFix))
     }
+}
+
+private fun declarationVariables(line: String) {
+    val spaceLessLine = line.replace(" ", "") // remove spaces from input
+    val listOfDeclaration = spaceLessLine.split("=")
+    if (!checkAssignment(listOfDeclaration)) return
+    if ("[+-]?[0-9]+".toRegex().matches(listOfDeclaration[1])) {
+        storage[listOfDeclaration[0]] = listOfDeclaration[1].toInt()
+    } else if ("[a-zA-Z]+".toRegex().matches(listOfDeclaration[1])) {
+        if (!storage.containsKey(listOfDeclaration[1])) {
+            println("Invalid assignment")
+            return
+        }
+        storage[listOfDeclaration[0]] = storage[listOfDeclaration[1]]!!
+    }
+    return
 }
 
 fun fromInfixToPostfix(input: List<CharSequence>): MutableList<Any> {
     val output: MutableList<Any> = mutableListOf()
     val stack: MutableList<Any> = mutableListOf()
-//    val spacedInput = input.replace("(", "( ").replace(")", " )")
-//    val inputList = spacedInput.split(" ")
     input.forEach {
         if ("[0-9a-zA-Z]+".toRegex().matches(it)) {
             output.add(it)
@@ -145,7 +120,6 @@ fun fromInfixToPostfix(input: List<CharSequence>): MutableList<Any> {
                     stack.removeAt(stack.size - 1) // removes the left parenthesis
                 }
             }
-//            stack.add(detectOperation(it))
         }
     }
     while (stack.isNotEmpty()) {
@@ -162,12 +136,12 @@ fun calculatePostFix(rpn: MutableList<Any>): Int {
             if ("[0-9]+".toRegex().matches(rpn[0].toString())) {
                 stack.add(rpn[0].toString().toInt())
                 rpn.removeAt(0)
-                println(stack)
             } else {
-                if (!storage.containsKey(rpn[0])) {
+                if (!storage.containsKey(rpn[0])) { //TODO: Waarden ophalen werkt nog niet goed.
                     println("Unknown variable")
                 }
-                stack.add(storage.getValue(rpn[0].toString()))
+                stack.add(storage.getValue(rpn[0].toString().lowercase()))
+                rpn.removeAt(0)
             }
         } else {
             val operator = rpn[0] as OperationType
@@ -186,7 +160,7 @@ fun checkAssignment(listOfDeclaration: List<String>): Boolean {
         if (!"[a-zA-Z]+".toRegex().matches(listOfDeclaration[0])) {
             throw IllegalArgumentException("Invalid identifier")
         }
-        if (!regexExpression.matches(listOfDeclaration[1])) {
+        if (!"[+-]?[0-9]+|[a-zA-Z]+".toRegex().matches(listOfDeclaration[1])) {
             throw IllegalArgumentException("Invalid assignment")
         }
         if (listOfDeclaration.size >= 3) {
@@ -201,15 +175,21 @@ fun checkAssignment(listOfDeclaration: List<String>): Boolean {
 
 fun expressionCheck(list: List<String>): Boolean {
     try {
+        var parLeftPresent = false
+        var parRightPresent = false
         for (i in list.indices) {
             if (!regexExpression.matches(list[i])) {
                 throw IllegalArgumentException()
             }
             if ("[(]".toRegex().containsMatchIn(list[i])) {
-                if (!"[)]".toRegex().containsMatchIn(list[i])) {
-                    throw IllegalArgumentException()
-                }
+                parLeftPresent = true
             }
+            if ("[)]".toRegex().containsMatchIn(list[i])) {
+                parRightPresent = true
+            }
+        }
+        if (!parLeftPresent == parRightPresent) { // checks if left and right parenthesis both exists, of both are not
+            throw IllegalArgumentException()
         }
     } catch (e: IllegalArgumentException) {
         println("Invalid expression")
