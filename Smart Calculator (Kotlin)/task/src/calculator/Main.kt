@@ -63,7 +63,7 @@ fun main() {
         //putting together an input to process to postfix and calculate
         val spacedInput = line.replace("(", "( ").replace(")", " )")
         val inputList = spacedInput.split(" ").filter { it.isNotBlank() }
-        if (!expressionCheck(inputList)) continue // TODO: Deze klopt nog niet.
+        if (!expressionCheck(inputList)) continue
         val postFix = fromInfixToPostfix(inputList)
         println(calculatePostFix(postFix))
     }
@@ -138,7 +138,7 @@ fun calculatePostFix(rpn: MutableList<Any>): BigInteger {
                 stack.add(rpn[0].toString().toBigInteger())
                 rpn.removeAt(0)
             } else {
-                if (!storage.containsKey(rpn[0])) { //TODO: Waarden ophalen werkt nog niet goed.
+                if (!storage.containsKey(rpn[0])) {
                     println("Unknown variable")
                 }
                 stack.add(storage.getValue(rpn[0].toString().lowercase()))
@@ -205,7 +205,7 @@ fun detectOperation(s: String): OperationType {
     var currentOperator = OperationType.ADD
     for (i in listOperators.indices) {
         when (listOperators[i]) {
-//          "+" -> bij een plus verandert er niet aan het operator type
+//          "+" -> plus sign doesn't change anything
 
             "-" -> if (currentOperator == OperationType.ADD) {
                 currentOperator = OperationType.SUBSTRACT

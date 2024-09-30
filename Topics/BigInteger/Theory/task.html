@@ -1,0 +1,47 @@
+<div class="step-text">
+<h5 id="using-large-numbers-in-kotlin">Using large numbers in Kotlin</h5>
+<p>As you might remember, the standard primitive integer types cannot store extremely large numbers. It is not possible to assign such a large number to a variable of the type <code class="language-kotlin">Int</code> (or even <code class="language-kotlin">Long</code>):</p>
+<pre><code class="language-kotlin">val y: Int = 62957291795228763406253098 // compilation error: The value is out of range</code></pre>
+<p>This is also the reason why operations with numbers can sometimes lead to <strong>overflow</strong>. Let's look at the example below:</p>
+<pre><code class="language-kotlin">var a: Int = Int.MAX_VALUE // 2147483647
+a += 2 // -2147483647</code></pre>
+<p>Luckily for us, the Java Class Library provides a class called <code class="language-kotlin">BigInteger</code> for processing very large numbers (both positive and negative). The size of a stored number is limited only by the available amount of memory. So, when you use Kotlin/JVM environment, you can use BigIntegers.</p>
+<p>The <code class="language-kotlin">BigInteger</code> class is <strong>immutable</strong> which means functions and operators of the class return new instances instead of changing existing ones.</p>
+<p>Although this type can store any integers, including small numbers, you should not use <code class="language-kotlin">BigInteger</code> unless you absolutely have to. There is always a performance hit associated with its use. <code class="language-kotlin">BigInteger</code> operations are slower than operations on built-in integer types.</p>
+<h5 id="creating-objects-of-biginteger">Creating objects of BigInteger</h5>
+<p>The class <code class="language-kotlin">BigInteger</code> belongs to the <code class="language-kotlin">java.math</code> package. We import it by writing the following statement:</p>
+<pre><code class="language-kotlin">import java.math.BigInteger</code></pre>
+<p>Here we can see an instance of the class that stores the large number that we have met before:</p>
+<pre><code class="language-kotlin">val number = BigInteger("62957291795228763406253098")</code></pre>
+<p>It is also possible to create an <a class="theory-lookup not-relevant" href="/learn/step/7964" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, an instance refers to an object or an instance of a class that is created during runtime. | It is a subtype of every known type in Kotlin, meaning it can represent a value of any type in terms of type checking. This is particularly useful in situations where a function demands a return type, but it is impossible to return a value, such as when calculating a percentage if the value is zero. In such cases, a function that returns `Instance` can be used. The concept of instance is also related to threading, where only one thread can execute code in a synchronized method of a particular instance. This means that different threads can execute methods of different objects at the same time, a concept that can be summarized as one thread per instance.">instance</a> by passing a <code class="language-kotlin">Long</code> value to the <code class="language-kotlin">valueOf</code> function:</p>
+<pre><code class="language-kotlin">val number = BigInteger.valueOf(1000000000)</code></pre>
+<p>Moreover, the class has several useful constants. Using a specific constant is slightly faster than creating an extra object:</p>
+<pre><code class="language-kotlin">val zero = BigInteger.ZERO // 0
+val one = BigInteger.ONE   // 1
+val ten = BigInteger.TEN   // 10</code></pre>
+<p>Also, there is a handy way to convert standard numbers and strings to <code class="language-kotlin">BigInteger</code>:</p>
+<pre><code class="language-kotlin">val numToBigInt = 1234.toBigInteger()
+val strToBigInt = "1234".toBigInteger()</code></pre>
+<h5 id="arithmetic-operations">Arithmetic operations</h5>
+<p>You can use operators to perform <a class="theory-lookup not-relevant" href="/learn/step/7964" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, arithmetic operations are mathematical calculations performed on numerical values using specific operators. | There are five arithmetic operators in Kotlin: addition (+), subtraction (-), multiplication (\*), division (/), and modulo (%). These operators are binary, meaning they take two operands, which are the values or variables the operator is being applied to. For example, in the expression 1 + 3, 1 and 3 are the operands, and + is the operator. Arithmetic operations in Kotlin follow specific rules, such as multiplication having a higher priority than addition or subtraction. Parentheses can be used to specify the order of execution and simplify notation. Additionally, Kotlin supports compound assignment operations that combine arithmetic operations and assignment, such as assignment after addition (a += b) and assignment after subtraction (a -= b).">arithmetic operations</a> with <code class="language-kotlin">BigInteger</code>:</p>
+<pre><code class="language-kotlin">val eleven = ten + one             // 10 + 1 = 11
+val nine = ten - one               // 10 - 1 = 9
+val oneHundredTen = ten * eleven   // 10 * 11 = 110
+val twelve = oneHundredTen / nine  // integer division = 12
+val two = oneHundredTen % nine     // remainder = 2</code></pre>
+<p>The <a class="theory-lookup not-relevant" href="/learn/step/7964" rel="noopener noreferrer nofollow" target="_blank" title="In Kotlin, a unary minus is a type of unary operation that operates on a single operand, negating its value. | It is represented by the '-' symbol placed before the operand. For instance, when applied to the number 35, it results in -35. This operation is useful in various scenarios, such as checking if a number is divisible by 2, where a negative result would indicate that the number is not even. It's important to note that the unary minus operation follows the two's complement rule for negative numbers.">unary minus</a> operator returns a new <code class="language-kotlin">BigInteger</code> that has an opposite sign.</p>
+<pre><code class="language-kotlin">val minusOne = -one // -1</code></pre>
+<p>Also, it is possible to use increment (<code class="language-kotlin">++</code>) and decrement (<code class="language-kotlin">--</code>) operators in prefix and postfix forms.</p>
+<h5 id="functions-of-biginteger">Functions of BigInteger</h5>
+<p>The <code class="language-kotlin">divideAndRemainder</code> function returns an array consisting of two numbers: the result of integer division and the remainder:</p>
+<pre><code class="language-kotlin">val (result, remainder) = oneHundredTen.divideAndRemainder(nine) // 12 and 2</code></pre>
+<p>The class also provides functions for performing more complex math operations. The <code class="language-kotlin">abs</code> function returns a new <code class="language-kotlin">BigInteger</code> whose value is the absolute value of this <code class="language-kotlin">BigInteger</code>:</p>
+<pre><code class="language-kotlin">val number = BigInteger("-8")
+println(number.abs()) // 8</code></pre>
+<p>The <code class="language-kotlin">gcd</code> function returns the <em>greatest common divisor</em> of two numbers.</p>
+<pre><code class="language-kotlin">val eight = BigInteger.valueOf(8)
+val six = BigInteger.valueOf(6)
+println(eight.gcd(six)) // 2</code></pre>
+<h5 id="conclusion">Conclusion</h5>
+<p> Now you know that Kotlin supports the Java type for handling arbitrary-precision integers. Let's practice!</p>
+</div>

@@ -1,0 +1,15 @@
+type: choice
+is_multiple_choice: false
+options:
+  - text: Any rational numbers.
+  - text: "Only zero, positive, and negative integer numbers."
+  - text: Only non-negative integer numbers.
+  - text: Any integer numbers except zero.
+files:
+  - name: src/Main.kt
+    visible: true
+    learner_created: false
+feedback_link: https://hyperskill.org/learn/step/7966#comment
+status: Solved
+record: -1
+local_check: false
